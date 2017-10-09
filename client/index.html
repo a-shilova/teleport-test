@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test chat</title>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="js/connection/peerConnection.js"></script>
+    <script src="js/connection/peerConnectionCollection.js"></script>
+    <script src="js/connection/signalConnection.js"></script>
+    <script src="js/chat/chunk.js"></script>
+    <script src="js/chat/file.js"></script>
+    <script src="js/chat/fileMessage.js"></script>
+    <script src="js/chat/chatUI.js"></script>
+    <script src="js/chat/chat.js"></script>
+
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div id="login-form" class="login-form">
+        <div class="login-cell">
+            <input type="text" id="login-text" />
+            <button id="login-btn">Login</button>
+        </div>
+    </div>
+
+    <div id="chat-box" class="chat-box">
+        <div id="user-list" class="user-list"></div>
+        <div class="messages-box">
+            <div class="messages" id="messages">
+            </div>
+            <div class="input-box">
+                <div>
+                    <input id="inputMsg" type="text" placeholder="Ваше сообщение"/>
+                    <button id="sendMsg">Отправить</button>
+                </div>
+                <input id="sendFile" type="file" />
+            </div>
+        </div>
+    </div>
+
+    <!--<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>-->
+    <!--<script src="js/chat-client.js"></script>-->
+</body>
+<script src="js/login.js"></script>
+
+</html>
