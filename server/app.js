@@ -1,22 +1,22 @@
 /**
  * Created by gaika on 30.09.2017.
  */
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 
-var express = require('express');
+const express = require('express');
 
 
-var connections = {};
-var room = 'default';
+const connections = {};
+const room = 'default';
 app.use(express.static('client'));
 
-io.on('connection', function(connection){
+io.on('connection', connection => {
 
-    connection.on('login', function(data) {
+    connection.on('login', data => {
         console.log('login ' + data);
-        var parseData = JSON.parse(data);
+        const parseData = JSON.parse(data);
         connections[connection.id] = connection;
         connection.name = parseData.name;
         connection.emit('login', {success: true});
@@ -25,15 +25,15 @@ io.on('connection', function(connection){
         connection.broadcast.to(connection.room).emit('new', {connectionId: connection.id, name: parseData.name});
     });
 
-    connection.on('disconnect', function() {
+    connection.on('disconnect', () => {
         console.log('user disconnected');
         connection.broadcast.to(connection.room).emit('leave', {connectionId: connection.id});
         delete connections[connection.id];
     });
 
-    connection.on('offer', function(data) {
-        var parseData = JSON.parse(data);
-        var conn = connections[parseData.connectionId];
+    connection.on('offer', data => {
+        const parseData = JSON.parse(data);
+        const conn = connections[parseData.connectionId];
         console.log('offer');
         if (conn) {
             console.log('offer on conn');
@@ -45,11 +45,11 @@ io.on('connection', function(connection){
         }
     });
 
-    connection.on('answer', function(data){
-        var parseData = JSON.parse(data);
+    connection.on('answer', data => {
+        const parseData = JSON.parse(data);
 
         console.log('answer');
-        var conn = connections[parseData.connectionId];
+        const conn = connections[parseData.connectionId];
         if (conn) {
             conn.emit('answer', {
                 answer: parseData.answer,
@@ -58,10 +58,10 @@ io.on('connection', function(connection){
         }
     });
 
-    connection.on('candidate', function(data) {
+    connection.on('candidate', data => {
         console.log('candidate');
-        var parseData = JSON.parse(data);
-        var conn = connections[parseData.connectionId];
+        const parseData = JSON.parse(data);
+        const conn = connections[parseData.connectionId];
         if (conn) {
             conn.emit('candidate', {
                 candidate: parseData.candidate,
@@ -72,6 +72,6 @@ io.on('connection', function(connection){
 
 });
 
-http.listen(9001, function(){
-    console.log('listening on *:3000');
+http.listen(9001, () => {
+    console.log('listening on *:9001');
 });

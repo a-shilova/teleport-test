@@ -39,37 +39,37 @@ FileMessage.prototype.add = function(chunk) {
 /**
  *
  */
-FileMessage.prototype.onStartLoading = function() {};
+FileMessage.prototype.onStartLoading = () => {};
 
 
 /**
  *
  */
-FileMessage.prototype.onMetaLoad = function() {};
+FileMessage.prototype.onMetaLoad = () => {};
 
 
 /**
  *
  */
-FileMessage.prototype.onProgress = function() {};
+FileMessage.prototype.onProgress = () => {};
 
 
 /**
  *
  */
-FileMessage.prototype.onStartLoading = function() {};
+FileMessage.prototype.onStartLoading = () => {};
 
 
 /**
  *
  */
-FileMessage.prototype.onMetaLoad = function() {};
+FileMessage.prototype.onMetaLoad = () => {};
 
 
 /**
  *
  */
-FileMessage.prototype.onLoad = function() {};
+FileMessage.prototype.onLoad = () => {};
 
 
 /**
@@ -77,9 +77,9 @@ FileMessage.prototype.onLoad = function() {};
  * @private
  */
 FileMessage.prototype._convertToBlob = function() {
-    var binary = atob(this.data.join(''));
-    var array = [];
-    for (var i = 0; i < binary.length; i++) {
+    const binary = atob(this.data.join(''));
+    const array = [];
+    for (let i = 0; i < binary.length; i++) {
         array.push(binary.charCodeAt(i));
     }
 

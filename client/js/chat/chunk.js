@@ -10,7 +10,7 @@
  */
 Chunk = function(message) {
     /** @type {{chunkCount: number, currentChunk: number, data: string, fileType: string, name: string, fileId: string, extension: string}} */
-    var data = typeof message === 'string' ? JSON.parse(message) : message;
+    const data = typeof message === 'string' ? JSON.parse(message) : message;
     this.fileId = data.fileId;
     this.data = data.data;
     this.currentChunk = data.currentChunk;

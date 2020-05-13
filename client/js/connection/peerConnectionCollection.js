@@ -17,7 +17,7 @@ PeerConnectionCollection = function() {
  * @param data
  */
 PeerConnectionCollection.prototype.create = function(data) {
-    var peerConn = new PeerConnection(data);
+    const peerConn = new PeerConnection(data);
     this.add(peerConn);
     this.onNewPeerConnection(peerConn);
     return peerConn;
@@ -55,7 +55,7 @@ PeerConnectionCollection.prototype.getById = function(id) {
  * @param {string} id
  */
 PeerConnectionCollection.prototype.deleteById = function(id) {
-    var peerConnection = this.getById(id);
+    const peerConnection = this.getById(id);
     if (peerConnection) {
         peerConnection.close();
         delete this._collection[id];
@@ -68,22 +68,22 @@ PeerConnectionCollection.prototype.deleteById = function(id) {
  * @param {{type: string, content: string}} message
  */
 PeerConnectionCollection.prototype.send = function(message) {
-    Object.keys(this._collection).forEach(function(key) {
+    Object.keys(this._collection).forEach(key => {
         this._collection[key].send(message);
-    }.bind(this));
+    });
 };
 
 
 /**
  * @param {PeerConnection} connection
  */
-PeerConnectionCollection.prototype.onNewPeerConnection = function(connection) {};
+PeerConnectionCollection.prototype.onNewPeerConnection = connection => {};
 
 
 /**
  * @param {string} name
  */
-PeerConnectionCollection.prototype.onDeletePeerConnection = function(name) {};
+PeerConnectionCollection.prototype.onDeletePeerConnection = name => {};
 
 
 /**

@@ -5,14 +5,14 @@
 
 //Инициализация формы
 
-var loginForm = document.getElementById('login-form');
-var loginBtn = document.getElementById('login-btn');
-var loginInput = document.getElementById('login-text');
+const loginForm = document.getElementById('login-form');
+const loginBtn = document.getElementById('login-btn');
+const loginInput = document.getElementById('login-text');
 
-var peerConnectionCollection = new PeerConnectionCollection();
-var signalConnection = new SignalConnection(io(), peerConnectionCollection);
+const peerConnectionCollection = new PeerConnectionCollection();
+const signalConnection = new SignalConnection(io(), peerConnectionCollection);
 
-var chatSelectors = {
+const chatSelectors = {
     chat: 'chat-box',
     sendButton: 'sendMsg',
     message: 'inputMsg',
@@ -21,10 +21,10 @@ var chatSelectors = {
     userList: 'user-list'
 };
 
-var chat = new Chat(chatSelectors, peerConnectionCollection);
+const chat = new Chat(chatSelectors, peerConnectionCollection);
 
-var onLogin = function() {
-    var name = loginInput.value;
+const onLogin = () => {
+    const name = loginInput.value;
     if (name.length > 0) {
         loginForm.style.display = 'none';
         signalConnection.send(SignalConnection.EVENT_TYPE.LOGIN, {name: name});
@@ -35,7 +35,7 @@ var onLogin = function() {
 loginBtn.onclick = onLogin;
 
 
-loginInput.onkeyup = function(e) {
+loginInput.onkeyup = e => {
     if (e.keyCode === 13) {
         onLogin();
     }

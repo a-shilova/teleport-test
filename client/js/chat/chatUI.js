@@ -7,8 +7,8 @@
  * @param {string} name
  * @return {Element}
  */
-drawUser = function(name) {
-    var div = document.createElement('div');
+drawUser = name => {
+    const div = document.createElement('div');
     div.textContent = name;
 
     return div;
@@ -19,8 +19,8 @@ drawUser = function(name) {
  * @param {string} text
  * @return {Element}
  */
-drawInfoMessage = function(text) {
-    var div = document.createElement('div');
+drawInfoMessage = text => {
+    const div = document.createElement('div');
     div.classList.add('message-info');
     div.textContent = text;
 
@@ -34,12 +34,12 @@ drawInfoMessage = function(text) {
  * @param {string} name
  * @return {Element}
  */
-drawMessage = function(text, toggleMy, name) {
-    var messageBox = document.createElement('div');
-    var div = document.createElement('div');
+drawMessage = (text, toggleMy, name) => {
+    const messageBox = document.createElement('div');
+    const div = document.createElement('div');
 
-    var spanUserName = document.createElement('span');
-    var spanText = document.createElement('span');
+    const spanUserName = document.createElement('span');
+    const spanText = document.createElement('span');
 
     if (toggleMy) {
         messageBox.classList.add('message-my');
@@ -70,12 +70,12 @@ drawMessage = function(text, toggleMy, name) {
  * @return {Element}
  */
 
-drawFileMessage = function(file, toggleMy, name) {
-    var messageBox = document.createElement('div');
-    var fileName = document.createElement('span');
-    var progress = document.createElement('div');
-    var spanUserName = document.createElement('div');
-    var div = document.createElement('div');
+drawFileMessage = (file, toggleMy, name) => {
+    const messageBox = document.createElement('div');
+    const fileName = document.createElement('span');
+    const progress = document.createElement('div');
+    const spanUserName = document.createElement('div');
+    const div = document.createElement('div');
 
     if (toggleMy) {
         messageBox.classList.add('message-my');
@@ -103,8 +103,8 @@ drawFileMessage = function(file, toggleMy, name) {
     }
 
     function onLoad(blob) {
-        var url = (window.URL || window.webkitURL).createObjectURL(blob);
-        var link = document.createElement('a');
+        const url = (window.URL || window.webkitURL).createObjectURL(blob);
+        const link = document.createElement('a');
         link.href = url;
         link.target = '_blank';
         link.download = file.name;

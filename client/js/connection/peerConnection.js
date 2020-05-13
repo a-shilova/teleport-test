@@ -3,7 +3,7 @@
  */
 
 
-var RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection;
+const RTCPeerConnection = window.RTCPeerConnection || window.webkitRTCPeerConnection;
 
 
 /**
@@ -13,14 +13,14 @@ PeerConnection = function(data) {
     this.id = data.connectionId;
     this.name = data.name;
     this._rtcConn = new RTCPeerConnection(PeerConnection.CONFIG);
-    this._rtcConn.ondatachannel = function(event) {
+    this._rtcConn.ondatachannel = event => {
         if (event.channel.label === PeerConnection.CHANNEL_TYPE.FILE) {
             this._createFileChannel(event.channel);
         }
         if (event.channel.label === PeerConnection.CHANNEL_TYPE.TEXT) {
             this._createTextChannel(event.channel);
         }
-    }.bind(this);
+    };
     if (data.forceChannels) {
         this._createFileChannel();
         this._createTextChannel();
@@ -59,22 +59,22 @@ PeerConnection.prototype.send = function(message) {
 PeerConnection.prototype._createTextChannel = function(opt_channel) {
     this._textChannel = opt_channel || this._rtcConn.createDataChannel(PeerConnection.CHANNEL_TYPE.TEXT);
 
-    this._textChannel.onopen = function(event) {
+    this._textChannel.onopen = event => {
         console.log('open channel');
-    }.bind(this);
+    };
 
-    this._textChannel.onerror = function(error) {
+    this._textChannel.onerror = error => {
         console.log(error);
     };
 
-    this._textChannel.onmessage = function(event) {
+    this._textChannel.onmessage = event => {
         this.onTextMessage({
             name: this.name,
             content: event.data
         });
-    }.bind(this);
+    };
 
-    this._textChannel.onclose = function() {
+    this._textChannel.onclose = () => {
         console.log('channelClose');
     };
 };
@@ -87,23 +87,23 @@ PeerConnection.prototype._createTextChannel = function(opt_channel) {
 PeerConnection.prototype._createFileChannel = function(opt_channel) {
     this._fileChannel = opt_channel || this._rtcConn.createDataChannel(PeerConnection.CHANNEL_TYPE.FILE);
 
-    this._fileChannel.onopen = function(event) {
+    this._fileChannel.onopen = event => {
         console.log('open channel');
-    }.bind(this);
+    };
 
-    this._fileChannel.onerror = function(error) {
+    this._fileChannel.onerror = error => {
         console.log(error);
     };
 
-    this._fileChannel.onmessage = function(event) {
-        var chunk = new Chunk(event.data);
+    this._fileChannel.onmessage = event => {
+        const chunk = new Chunk(event.data);
         this.onFileMessage({
             name: this.name,
             chunk: chunk
         });
-    }.bind(this);
+    };
 
-    this._fileChannel.onclose = function() {
+    this._fileChannel.onclose = () => {
         console.log('channelClose');
     };
 };
@@ -113,14 +113,14 @@ PeerConnection.prototype._createFileChannel = function(opt_channel) {
  *
  * @param {{name: string, content: string}} message
  */
-PeerConnection.prototype.onTextMessage = function(message) {};
+PeerConnection.prototype.onTextMessage = message => {};
 
 
 /**
  *
  * @param {{name: string, chunk: Chunk}} message
  */
-PeerConnection.prototype.onFileMessage = function(message) {};
+PeerConnection.prototype.onFileMessage = message => {};
 
 
 /**

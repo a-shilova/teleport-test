@@ -3,27 +3,29 @@
  */
 
 
-/**
- * @param {{chat: string, sendButton: string, message: string, file: string, messages: string, userList: string}} selectors
- * @param {PeerConnectionCollection} collection
- * @constructor
- */
-Chat = function(selectors, collection) {
-    this._userList = document.getElementById(selectors.userList);
-    this._message = document.getElementById(selectors.message);
-    this._file = document.getElementById(selectors.file);
-    this._chat = document.getElementById(selectors.chat);
-    this._messages = document.getElementById(selectors.messages);
-    this._sendButton = document.getElementById(selectors.sendButton);
+class Chat {
+    /**
+     * @param {{chat: string, sendButton: string, message: string, file: string, messages: string, userList: string}} selectors
+     * @param {PeerConnectionCollection} collection
+     * @constructor
+     */
+    constructor(selectors, collection) {
+        this._userList = document.getElementById(selectors.userList);
+        this._message = document.getElementById(selectors.message);
+        this._file = document.getElementById(selectors.file);
+        this._chat = document.getElementById(selectors.chat);
+        this._messages = document.getElementById(selectors.messages);
+        this._sendButton = document.getElementById(selectors.sendButton);
 
-    this._pcc = collection;
-    this._pcc.onNewPeerConnection = this._onNewPeer.bind(this);
-    this._pcc.onDeletePeerConnection = this._onDeletePeer.bind(this);
+        this._pcc = collection;
+        this._pcc.onNewPeerConnection = this._onNewPeer.bind(this);
+        this._pcc.onDeletePeerConnection = this._onDeletePeer.bind(this);
 
-    this._subscribeToEvents();
+        this._subscribeToEvents();
 
-    this._recivedFileMessages = {};
-};
+        this._recivedFileMessages = {};
+    }
+}
 
 
 /**
@@ -31,7 +33,7 @@ Chat = function(selectors, collection) {
  * @private
  */
 Chat.prototype._onNewPeer = function(connection) {
-    var infoMessage = drawInfoMessage('Пользователь ' + connection.name + ' присоединился к чату');
+    const infoMessage = drawInfoMessage('Пользователь ' + connection.name + ' присоединился к чату');
 
     if (this._messages.childElementCount > 0) {
         this._messages.insertBefore(infoMessage, this._messages.childNodes[0]);
@@ -51,7 +53,7 @@ Chat.prototype._onNewPeer = function(connection) {
  * @private
  */
 Chat.prototype._onDeletePeer = function(name) {
-    var infoMessage = drawInfoMessage('Пользователь ' + name + ' покинул чат');
+    const infoMessage = drawInfoMessage('Пользователь ' + name + ' покинул чат');
 
     if (this._messages.childElementCount > 0) {
         this._messages.insertBefore(infoMessage, this._messages.childNodes[0]);
@@ -68,9 +70,9 @@ Chat.prototype._onDeletePeer = function(name) {
  */
 Chat.prototype._updateUserList = function() {
     this._userList.innerHTML = '';
-    this._pcc.getNames().forEach(function(name) {
+    this._pcc.getNames().forEach(name => {
         this._userList.appendChild(drawUser(name));
-    }.bind(this));
+    });
 };
 
 
@@ -79,11 +81,11 @@ Chat.prototype._updateUserList = function() {
  */
 Chat.prototype._subscribeToEvents = function() {
     this._sendButton.onclick = this._onSendButtonClick.bind(this);
-    this._message.onkeyup = function(e) {
+    this._message.onkeyup = e => {
         if (e.keyCode === 13) {
             this._onSendButtonClick();
         }
-    }.bind(this);
+    };
     this._file.onchange = this._onFileChange.bind(this);
 
 };
@@ -98,7 +100,7 @@ Chat.prototype._onSendButtonClick = function() {
             content: this._message.value,
             type: 'text'
         });
-        var messageBox = drawMessage(this._message.value, true, 'Я');
+        const messageBox = drawMessage(this._message.value, true, 'Я');
         if (this._messages.childElementCount > 0) {
             this._messages.appendChild(messageBox);
         } else {
@@ -123,7 +125,7 @@ Chat.prototype._onFileChange = function(event) {
  * @private
  */
 Chat.prototype._onTextMessage = function(message) {
-    var messageBox = drawMessage(message.content, false, message.name);
+    const messageBox = drawMessage(message.content, false, message.name);
     this._drawMessageBox(messageBox);
 };
 
@@ -133,13 +135,13 @@ Chat.prototype._onTextMessage = function(message) {
  * @private
  */
 Chat.prototype._onFileMessageUpload = function(event) {
-    var chunk = event.chunk;
-    var rfm = this._recivedFileMessages[chunk.fileId];
+    const chunk = event.chunk;
+    let rfm = this._recivedFileMessages[chunk.fileId];
     if (rfm) {
         rfm.add(chunk);
     } else {
         rfm = new FileMessage();
-        var fileBox = drawFileMessage(rfm, false, event.name);
+        const fileBox = drawFileMessage(rfm, false, event.name);
         this._drawMessageBox(fileBox);
         rfm.add(chunk);
         this._recivedFileMessages[rfm.id] = rfm;
@@ -152,7 +154,7 @@ Chat.prototype._onFileMessageUpload = function(event) {
  * @private
  */
 Chat.prototype._onUploadFile = function(rfm) {
-    var fileBox = drawFileMessage(rfm, true, 'Я');
+    const fileBox = drawFileMessage(rfm, true, 'Я');
     this._drawMessageBox(fileBox);
 };
 

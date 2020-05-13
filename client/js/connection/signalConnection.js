@@ -42,7 +42,7 @@ SignalConnection.prototype._subscribeToEvents = function() {
  *
  * @private
  */
-SignalConnection.prototype._onLogin = function() {
+SignalConnection.prototype._onLogin = () => {
     console.log('login');
 };
 
@@ -54,23 +54,23 @@ SignalConnection.prototype._onLogin = function() {
 SignalConnection.prototype._onNewConnection = function(data) {
     console.log('onnewconn');
     data['forceChannels'] = true;
-    var peerConnection = this._peerConnCollection.create(data);
-    var rtcConnection = peerConnection.getConnection();
-    rtcConnection.onicecandidate = function (event) {
+    const peerConnection = this._peerConnCollection.create(data);
+    const rtcConnection = peerConnection.getConnection();
+    rtcConnection.onicecandidate = event => {
         if (event.candidate) {
             this.send(SignalConnection.EVENT_TYPE.CANDIDATE, {
                 candidate: event.candidate,
                 connectionId: peerConnection.id
             });
         }
-    }.bind(this);
-    rtcConnection.createOffer(function(offer) {
+    };
+    rtcConnection.createOffer(offer => {
         this.send(SignalConnection.EVENT_TYPE.OFFER, {
             offer: offer,
             connectionId: peerConnection.id
         });
         rtcConnection.setLocalDescription(offer);
-    }.bind(this), function(error) {
+    }, error => {
         console.log(error);
     })
 };
@@ -82,24 +82,24 @@ SignalConnection.prototype._onNewConnection = function(data) {
  */
 SignalConnection.prototype._onNewOffer = function(data) {
     console.log('new offer');
-    var peerConnection = this._peerConnCollection.create(data);
-    var rtcConnection = peerConnection.getConnection();
-    rtcConnection.onicecandidate = function (event) {
+    const peerConnection = this._peerConnCollection.create(data);
+    const rtcConnection = peerConnection.getConnection();
+    rtcConnection.onicecandidate = event => {
         if (event.candidate) {
             this.send(SignalConnection.EVENT_TYPE.CANDIDATE, {
                 candidate: event.candidate,
                 connectionId: peerConnection.id
             });
         }
-    }.bind(this);
+    };
     rtcConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
-    rtcConnection.createAnswer(function(answer) {
+    rtcConnection.createAnswer(answer => {
         rtcConnection.setLocalDescription(answer);
         this.send(SignalConnection.EVENT_TYPE.ANSWER, {
             answer: answer,
             connectionId: peerConnection.id
         })
-    }.bind(this), function(err) {
+    }, err => {
         console.log(err);
     });
 };
@@ -110,7 +110,7 @@ SignalConnection.prototype._onNewOffer = function(data) {
  * @private
  */
 SignalConnection.prototype._onAnswer = function(data) {
-    var peerConnection = this._peerConnCollection.getById(data.connectionId);
+    const peerConnection = this._peerConnCollection.getById(data.connectionId);
     console.log('answer');
     if (peerConnection) {
         peerConnection.getConnection().setRemoteDescription(new RTCSessionDescription(data.answer));
@@ -124,7 +124,7 @@ SignalConnection.prototype._onAnswer = function(data) {
  */
 SignalConnection.prototype._onCandidate = function(data) {
     console.log('candidate');
-    var peerConnection = this._peerConnCollection.getById(data.connectionId);
+    const peerConnection = this._peerConnCollection.getById(data.connectionId);
     if (peerConnection) {
         peerConnection.getConnection().addIceCandidate(new RTCIceCandidate(data.candidate));
     }

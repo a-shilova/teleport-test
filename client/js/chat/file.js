@@ -16,10 +16,8 @@ FileInput = function(data) {
 /**
  * @return {string}
  */
-FileInput.generateUuid = function() {
-    var s4 = function() {
-        return Math.floor(Math.random() * 0x10000).toString(16);
-    };
+FileInput.generateUuid = () => {
+    const s4 = () => Math.floor(Math.random() * 0x10000).toString(16);
 
     return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
 };
@@ -31,18 +29,18 @@ FileInput.generateUuid = function() {
  * @param {Function} onStart
  */
 FileInput.createMessage = function(file, callback, onStart) {
-    var count = Math.ceil(file.size / FileInput.CHUNK_SIZE);
-    var currentChunk = 0;
-    var id = this.generateUuid();
-    var fileMessage = new FileMessage();
+    const count = Math.ceil(file.size / FileInput.CHUNK_SIZE);
+    let currentChunk = 0;
+    const id = this.generateUuid();
+    const fileMessage = new FileMessage();
     onStart(fileMessage);
 
-    var fileRead = function() {
+    const fileRead = () => {
         if (currentChunk < count) {
-            var fileReader = new FileReader();
-            var part = file.slice(currentChunk * FileInput.CHUNK_SIZE, (currentChunk + 1) * FileInput.CHUNK_SIZE);
-            fileReader.onload = function(e) {
-                var chunk = new Chunk({
+            const fileReader = new FileReader();
+            const part = file.slice(currentChunk * FileInput.CHUNK_SIZE, (currentChunk + 1) * FileInput.CHUNK_SIZE);
+            fileReader.onload = e => {
+                const chunk = new Chunk({
                     chunkCount: count,
                     currentChunk: currentChunk + 1,
                     data: e.target.result.split(',')[1],
@@ -52,7 +50,7 @@ FileInput.createMessage = function(file, callback, onStart) {
                     fileId: id
                 });
                 fileMessage.add(chunk);
-                var config = {
+                const config = {
                     type: 'file',
                     content: chunk
                 };
