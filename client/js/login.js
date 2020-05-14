@@ -3,7 +3,7 @@
  */
 
 
-//Инициализация формы
+// Инициализация формы
 
 const loginForm = document.getElementById('login-form');
 const loginBtn = document.getElementById('login-btn');
@@ -13,30 +13,30 @@ const peerConnectionCollection = new PeerConnectionCollection();
 const signalConnection = new SignalConnection(io(), peerConnectionCollection);
 
 const chatSelectors = {
-    chat: 'chat-box',
-    sendButton: 'sendMsg',
-    message: 'inputMsg',
-    file: 'sendFile',
-    messages: 'messages',
-    userList: 'user-list'
+  chat: 'chat-box',
+  sendButton: 'sendMsg',
+  message: 'inputMsg',
+  file: 'sendFile',
+  messages: 'messages',
+  userList: 'user-list',
 };
 
-const chat = new Chat(chatSelectors, peerConnectionCollection);
+const chat = new Chat({chatSelectors, peerConnectionCollection});
 
 const onLogin = () => {
-    const name = loginInput.value;
-    if (name.length > 0) {
-        loginForm.style.display = 'none';
-        signalConnection.send(SignalConnection.EVENT_TYPE.LOGIN, {name: name});
-    }
+  const name = loginInput.value;
+  if (name.length > 0) {
+    loginForm.style.display = 'none';
+    signalConnection.send(SignalConnection.EVENT_TYPE.LOGIN, {name: name});
+  }
 };
 
 
 loginBtn.onclick = onLogin;
 
 
-loginInput.onkeyup = e => {
-    if (e.keyCode === 13) {
-        onLogin();
-    }
+loginInput.onkeyup = (e) => {
+  if (e.keyCode === 13) {
+    onLogin();
+  }
 };

@@ -5,5 +5,10 @@
     "express": "^4.15.2",
     "socket.io": "~1"
   },
-  "author": "anastasiia.a.shilova@gmail.com"
+  "author": "anastasiia.a.shilova@gmail.com",
+  "devDependencies": {
+    "eslint": "^7.0.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-prettier": "^3.1.3"
+  }
 }
