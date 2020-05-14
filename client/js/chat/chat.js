@@ -67,7 +67,7 @@ class Chat {
    * @private
    */
   _onNewPeer(connection) {
-    const infoMessage = drawInfoMessage(
+    const infoMessage = this._drawInfoMessage(
         'Пользователь ' +
       connection.name +
       ' присоединился к чату',
@@ -94,7 +94,7 @@ class Chat {
    */
   _onDeletePeer(name) {
     const textMessage = 'Пользователь ' + name + ' покинул чат';
-    const infoMessageEl = drawInfoMessage(textMessage);
+    const infoMessageEl = this._drawInfoMessage(textMessage);
 
     if (this._messagesEl.childElementCount > 0) {
       this._messagesEl.insertBefore(
@@ -114,7 +114,7 @@ class Chat {
   _updateUserList() {
     this._userListEl.innerHTML = '';
     this._pcc.getNames().forEach((name) => {
-      this._userListEl.appendChild(drawUser(name));
+      this._userListEl.appendChild(this._drawUser(name));
     });
   }
 
@@ -140,7 +140,7 @@ class Chat {
         content: this._messageEl.value,
         type: 'text',
       });
-      const messageBox = drawMessage(this._messageEl.value, true, 'Я');
+      const messageBox = this._drawMessage(this._messageEl.value, true, 'Я');
       if (this._messagesEl.childElementCount > 0) {
         this._messagesEl.appendChild(messageBox);
       } else {
@@ -168,7 +168,7 @@ class Chat {
    * @private
    */
   _onTextMessage(message) {
-    const messageBox = drawMessage(message.content, false, message.name);
+    const messageBox = this._drawMessage(message.content, false, message.name);
     this._drawMessageBox(messageBox);
   }
 
@@ -184,23 +184,21 @@ class Chat {
       rfm.add(chunk);
     } else {
       rfm = new FileMessage();
-      const fileBox = drawFileMessage(rfm, false, event.name);
+      const fileBox = this._drawFileMessage(rfm, false, event.name);
       this._drawMessageBox(fileBox);
       rfm.add(chunk);
       this._recivedFileMessages[rfm.id] = rfm;
     }
   }
 
-
   /**
    * @param  {FileMessage} rfm
    * @private
    */
   _onUploadFile(rfm) {
-    const fileBox = drawFileMessage(rfm, true, 'Я');
+    const fileBox = this._drawFileMessage(rfm, true, 'Я');
     this._drawMessageBox(fileBox);
   }
-
 
   /**
    * @param {Element} elem
@@ -212,7 +210,127 @@ class Chat {
       this._messagesEl.insertBefore(elem, this._messagesEl.childNodes[0]);
     }
   }
+
+  /**
+   * @param {string} name
+   * @return {Element}
+   */
+  _drawUser(name) {
+    const div = document.createElement('div');
+    div.textContent = name;
+
+    return div;
+  };
+
+
+  /**
+   * @param {string} text
+   * @return {Element}
+   */
+  _drawInfoMessage(text) {
+    const div = document.createElement('div');
+    div.classList.add('message-info');
+    div.textContent = text;
+
+    return div;
+  };
+
+
+  /**
+   * @param {string} text
+   * @param {boolean} toggleMy
+   * @param {string} name
+   * @return {Element}
+   */
+  _drawMessage(text, toggleMy, name) {
+    const messageBox = document.createElement('div');
+    const div = document.createElement('div');
+
+    const spanUserName = document.createElement('span');
+    const spanText = document.createElement('span');
+
+    if (toggleMy) {
+      messageBox.classList.add('message-my');
+    } else {
+      messageBox.classList.add('message-user');
+    }
+
+    spanUserName.classList.add('user-name');
+    spanUserName.textContent = name;
+
+    spanText.classList.add('message-text');
+    spanText.textContent = text;
+
+    div.classList.add('wrap');
+    div.appendChild(spanUserName);
+
+    messageBox.appendChild(div);
+    messageBox.appendChild(spanText);
+
+    return messageBox;
+  };
+
+
+  /**
+   * @param {object} file
+   * @param {boolean} toggleMy
+   * @param {string} name
+   * @return {Element}
+   */
+  _drawFileMessage(file, toggleMy, name) {
+    const messageBox = document.createElement('div');
+    const fileName = document.createElement('span');
+    const progress = document.createElement('div');
+    const spanUserName = document.createElement('div');
+    const div = document.createElement('div');
+
+    if (toggleMy) {
+      messageBox.classList.add('message-my');
+    } else {
+      messageBox.classList.add('message-user');
+    }
+
+    spanUserName.classList.add('user-name');
+    spanUserName.textContent = name;
+
+    progress.classList.add('file-progress');
+
+    fileName.classList.add('message-text');
+    fileName.textContent = 'File';
+
+    div.classList.add('wrap');
+    div.appendChild(spanUserName);
+
+    messageBox.appendChild(div);
+    messageBox.appendChild(fileName);
+    messageBox.appendChild(progress);
+
+    const onProgress = (p) => {
+      progress.style.width = p + '%';
+    };
+
+    const onLoad = (blob) => {
+      const url = (window.URL || window.webkitURL).createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.download = file.name;
+      link.textContent = 'Save';
+      messageBox.appendChild(link);
+    };
+
+    const onMetaLoad = () => {
+      fileName.textContent = file.name;
+    };
+
+    file.onProgress = onProgress;
+    file.onLoad = onLoad;
+    file.onMetaLoad = onMetaLoad;
+
+    return messageBox;
+  };
 }
+
 /**
  * @typedef {{
  *     selectors: Chat.Selectors,

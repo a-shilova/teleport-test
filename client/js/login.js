@@ -12,7 +12,7 @@ const loginInput = document.getElementById('login-text');
 const peerConnectionCollection = new PeerConnectionCollection();
 const signalConnection = new SignalConnection(io(), peerConnectionCollection);
 
-const chatSelectors = {
+const selectors = {
   chat: 'chat-box',
   sendButton: 'sendMsg',
   message: 'inputMsg',
@@ -21,7 +21,7 @@ const chatSelectors = {
   userList: 'user-list',
 };
 
-const chat = new Chat({chatSelectors, peerConnectionCollection});
+const chat = new Chat({selectors, collection: peerConnectionCollection});
 
 const onLogin = () => {
   const name = loginInput.value;
